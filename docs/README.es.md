@@ -1,4 +1,6 @@
-Cuando ejecutes el programa quizá tarde un rato. 
+# Fútbol
+
+Cuando ejecutes el programa quizá tarde un rato.
 
 El programa va a continuar hasta que la media de las posiciones de los equipos sea la misma tras añadir 100 resultados más. Sólo se hace un error de 10-3 porque todas las medias de todos los equipos tienen que ser menor que el error, y sino tardaría demasiado tiempo. Esos 100 resultados son 1000 la primera vez. Cada resultado es la posición en la que quedó cada equipo tras 13 partidos viendo las probabilidades de ganar, empatar o perder. Si hay un empate a puntos se pone antes el equipo que tenía más puntos en los datos originales.
 
