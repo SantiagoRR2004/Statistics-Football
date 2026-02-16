@@ -2,6 +2,32 @@ set.seed(100)
 dd <- read.table("resultados.txt", header = TRUE, sep = "\t") # Importamos los datos
 knitr::kable(dd[, 1:8])
 
+
+predictionOriginal <- function(dd) {
+  # Creamos esta función que calcula los resultados del fin de temporada
+  ll <- function(data, n) {
+    # Creamos esta función que calcula los resultados de una ronda de partidos
+    return(sample(x = c(3, 1, 0), size = 1, replace = TRUE, prob = c(data / n))) # n es el número de partidos jugados y data son el número de partidos ganados, empatados y perdidos
+  }
+  updatedd <- function(data) {
+    # Creamos esta función que actualiza los resultados para cada ronda de partidos
+    n <- mean(data[, 3]) # n es el número de partidos jugados
+    x <- apply(data[, 4:6], MARGIN = 1, ll, n) # x es un vector con el número de puntos que se le suma a cada equipo
+    data[, 2] <- data[, 2] + x # Sumamos las puntuaciones
+    data[, 3] <- data[, 3] + 1 # Sumamos uno al número de partidos jugados
+    data[, 4] <- data[, 4] + as.integer(x == 3) # Sumamos uno al número de partidos ganados a quienes ganaron
+    data[, 5] <- data[, 5] + as.integer(x == 1) # Sumamos uno al número de partidos empatados a quienes empataron
+    data[, 6] <- data[, 6] + as.integer(x == 0) # Sumamos uno al número de partidos perdidos a quienes perdieron
+    return(data) # Devolvemos los datos actualizados
+  }
+  for (i in 1:13) {
+    # Esto actualiza la información de los 13 partidos nuevos
+    dd <- updatedd(dd)
+  }
+  return(order(dd[, 2], decreasing = TRUE)) # La función predictión devuelve el orden en el que quedaron los equipos
+}
+
+
 prediction <- function(dd) {
   # Creamos esta función que calcula los resultados del fin de temporada
   ll <- function(data, n) {
@@ -62,7 +88,19 @@ while (!all(abs(x1 - x0) < err)) {
   }) # Calculamos las nuevas medias
 }
 
-write.table(pred, file = "predictions.txt") # Guardamos los resultados en el fichero prediction
-1 - sum(pred["Celta", (ncol(pred) - 3):ncol(pred)]) / sum(pred["Celta", ]) # Calculamos la probabilidad de que el Celta descienda
-sum(pred["Atlético", 1:5]) / sum(pred["Atlético", ]) # Calculamos la probabilidad de que el Atlético ascienda
+# Guardamos los resultados en el fichero prediction
+write.table(pred, file = "predictions.txt")
+
 print(x1)
+
+# Calculamos la probabilidad de que el Atlético quede entre los cinco primeros (ascenso)
+print(paste(
+  "La probabilidad del Atlético",
+  sum(pred["Atlético", 1:5]) / sum(pred["Atlético", ])
+))
+
+# Calculamos la probabilidad de que el Celta quede entre los tres últimos (descenso)
+print(paste(
+  "La probabilidad del Celta",
+  1 - sum(pred["Celta", (ncol(pred) - 3):ncol(pred)]) / sum(pred["Celta", ])
+))
