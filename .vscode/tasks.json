@@ -2,24 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Install REditorSupport Extension",
-      "type": "shell",
-      "command": "code --install-extension REditorSupport.r",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "reveal": "silent",
-        "focus": false,
-        "panel": "new"
-      },
-      "runOptions": {
-        "runOn": "folderOpen" // Run this task when the folder is opened
-      },
-      "problemMatcher": []
-    },
-    {
       "label": "Install RDebugger Extension",
       "type": "shell",
       "command": "code --install-extension RDebugger.r-debugger",
@@ -37,7 +19,6 @@
       },
       "problemMatcher": []
     },
-
     {
       "label": "Install Air - R Language Support Extension",
       "type": "shell",
